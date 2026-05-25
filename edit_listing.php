@@ -33,26 +33,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $image_path      = $listing['image_path'];
 
     if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
-        $allowed  = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
-        $max_size = 5 * 1024 * 1024;
-        if (!in_array($_FILES['image']['type'], $allowed)) {
+        $finfo    = finfo_open(FILEINFO_MIME_TYPE);
+        $mime     = finfo_file($finfo, $_FILES['image']['tmp_name']);
+        finfo_close($finfo);
+        $allowed  = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
+        $max_size = 2 * 1024 * 1024;
+        if (!in_array(strtolower($mime), $allowed)) {
             $error = "Only JPG, PNG, WEBP or GIF images are allowed.";
         } elseif ($_FILES['image']['size'] > $max_size) {
-            $error = "Image must be under 5MB.";
+            $error = "Image must be under 2MB.";
         } else {
-            $upload_dir  = __DIR__ . '/uploads/listings/';
-            $url_dir     = 'uploads/listings/';
+            $upload_dir = __DIR__ . '/uploads/listings/';
+            $url_dir    = 'uploads/listings/';
             if (!is_dir($upload_dir)) mkdir($upload_dir, 0755, true);
-            $ext         = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
-            $filename    = uniqid('listing_') . '.' . $ext;
-            $destination = $upload_dir . $filename;
-            if (move_uploaded_file($_FILES['image']['tmp_name'], $destination)) {
-                if (!empty($listing['image_path']) && file_exists(__DIR__ . '/' . $listing['image_path'])) {
-                    unlink(__DIR__ . '/' . $listing['image_path']);
-                }
+            $ext_map  = ['image/jpeg'=>'jpg','image/jpg'=>'jpg','image/png'=>'png','image/webp'=>'webp','image/gif'=>'gif'];
+            $ext      = $ext_map[strtolower($mime)] ?? 'jpg';
+            $filename = uniqid('listing_') . '.' . $ext;
+            if (move_uploaded_file($_FILES['image']['tmp_name'], $upload_dir . $filename)) {
+                // Try to delete old file — ignore errors if it doesn't exist
+                if (!empty($listing['image_path'])) @unlink(__DIR__ . '/' . $listing['image_path']);
                 $image_path = $url_dir . $filename;
             } else {
-                $error = "Failed to upload image. Please try again.";
+                $error = "Upload failed — the uploads folder may not be writable.";
             }
         }
     }
@@ -134,7 +136,7 @@ textarea{resize:vertical;min-height:100px}
     <form method="POST" enctype="multipart/form-data">
 
       <label>Item Photo</label>
-      <?php if(!empty($listing['image_path']) && file_exists(__DIR__ . '/' . $listing['image_path'])): ?>
+      <?php if(!empty($listing['image_path'])): ?>
         <div class="current-img"><img src="<?= htmlspecialchars($listing['image_path']) ?>" alt="Current photo"></div>
         <div style="font-size:12px;color:#6B5C4A;margin-top:6px">Current photo shown above. Upload a new one to replace it.</div>
       <?php endif; ?>

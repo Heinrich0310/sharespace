@@ -309,7 +309,7 @@ footer span{color:#F4A261}
         <div class="my-listing-card">
           <div class="my-listing-img">
             <?php
-              $l_img = (!empty($l['image_path']) && file_exists(__DIR__ . '/' . $l['image_path']))
+              $l_img = !empty($l['image_path'])
                        ? $l['image_path']
                        : ($listing_photos[$l['title']] ?? $category_photos[$l['category_name']] ?? null);
             ?>
@@ -353,7 +353,7 @@ footer span{color:#F4A261}
         <div class="rental-row">
           <div class="rental-row-img">
             <?php
-              $r_img = (!empty($r['image_path']) && file_exists(__DIR__ . '/' . $r['image_path']))
+              $r_img = !empty($r['image_path'])
                        ? $r['image_path']
                        : ($listing_photos[$r['title']] ?? null);
             ?>
@@ -395,7 +395,7 @@ footer span{color:#F4A261}
           <a href="listing.php?id=<?= $w['listing_id'] ?>" class="wishlist-card">
             <div class="wishlist-img">
               <?php
-                $w_img = (!empty($w['image_path']) && file_exists(__DIR__ . '/' . $w['image_path']))
+                $w_img = !empty($w['image_path'])
                          ? $w['image_path']
                          : ($listing_photos[$w['title']] ?? $category_photos[$w['category_name']] ?? null);
               ?>

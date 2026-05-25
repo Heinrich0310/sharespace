@@ -21,24 +21,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Handle image upload
     if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
-        $allowed  = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
-        $max_size = 5 * 1024 * 1024;
+        // Use finfo for reliable MIME detection (not $_FILES['type'] which can be spoofed/wrong)
+        $finfo    = finfo_open(FILEINFO_MIME_TYPE);
+        $mime     = finfo_file($finfo, $_FILES['image']['tmp_name']);
+        finfo_close($finfo);
+        $allowed  = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/gif'];
+        $max_size = 2 * 1024 * 1024; // 2MB — safe for shared hosting
 
-        if (!in_array($_FILES['image']['type'], $allowed)) {
-            $error = "Only JPG, PNG, WEBP or GIF images are allowed.";
+        if (!in_array(strtolower($mime), $allowed)) {
+            $error = "Only JPG, PNG, WEBP or GIF images are allowed. Detected: $mime";
         } elseif ($_FILES['image']['size'] > $max_size) {
-            $error = "Image must be under 5MB.";
+            $error = "Image must be under 2MB.";
         } else {
-            $upload_dir  = __DIR__ . '/uploads/listings/';
-            $url_dir     = 'uploads/listings/';
+            $upload_dir = __DIR__ . '/uploads/listings/';
+            $url_dir    = 'uploads/listings/';
             if (!is_dir($upload_dir)) mkdir($upload_dir, 0755, true);
-            $ext         = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
-            $filename    = uniqid('listing_') . '.' . $ext;
-            $destination = $upload_dir . $filename;
-            if (move_uploaded_file($_FILES['image']['tmp_name'], $destination)) {
+            // Always save as .jpg for JPEGs, keep extension otherwise
+            $ext_map  = ['image/jpeg' => 'jpg', 'image/jpg' => 'jpg',
+                         'image/png'  => 'png', 'image/webp' => 'webp', 'image/gif' => 'gif'];
+            $ext      = $ext_map[strtolower($mime)] ?? pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
+            $filename = uniqid('listing_') . '.' . $ext;
+            if (move_uploaded_file($_FILES['image']['tmp_name'], $upload_dir . $filename)) {
                 $image_path = $url_dir . $filename;
             } else {
-                $error = "Failed to upload image. Please try again.";
+                $error = "Upload failed — the uploads folder may not be writable on this server.";
             }
         }
     }

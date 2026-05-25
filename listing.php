@@ -51,7 +51,7 @@ $category_photos = [
 
 // Resolve the image to display
 $display_photo = '';
-if (!empty($item['image_path']) && file_exists(__DIR__ . '/' . $item['image_path'])) {
+if (!empty($item['image_path'])) {
     $display_photo = $item['image_path'];
 } elseif (isset($listing_photos[$item['title']])) {
     $display_photo = $listing_photos[$item['title']];

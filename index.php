@@ -332,7 +332,7 @@ footer{background:#18120A;color:rgba(255,255,255,0.4);padding:48px 32px 32px;mar
     <?php if(count($listings) > 0): ?>
       <?php foreach($listings as $item):
         $photo = '';
-        if(!empty($item['image_path']) && file_exists(__DIR__ . '/' . $item['image_path'])) {
+        if(!empty($item['image_path'])) {
             $photo = $item['image_path'];
         } elseif(isset($listing_photos[$item['title']])) {
             $photo = $listing_photos[$item['title']];
