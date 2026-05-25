@@ -55,7 +55,7 @@ CREATE TABLE `listings` (
   `description` text COLLATE utf8mb4_unicode_ci,
   `image_path` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT '',
   `price_per_day` decimal(10,2) NOT NULL,
-  `availability_status` enum('available','unavailable') COLLATE utf8mb4_unicode_ci DEFAULT 'available',
+  `availability_status` enum('available','unavailable','pending') COLLATE utf8mb4_unicode_ci DEFAULT 'pending',
   `delivery_option` enum('collection','delivery','both') COLLATE utf8mb4_unicode_ci DEFAULT 'collection',
   `created_at` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`listing_id`),

@@ -442,9 +442,16 @@ footer{background:#18120A;color:rgba(255,255,255,0.4);padding:48px 32px 32px;mar
         <a href="index.php?cat=<?= urlencode($c['category_name']) ?>"><?= htmlspecialchars($c['category_name']) ?></a>
       <?php endforeach; ?>
     </div>
+    <div class="footer-col">
+      <h4>Legal</h4>
+      <a href="terms.php">Terms &amp; Conditions</a>
+      <a href="popia.php">Privacy Policy (POPIA)</a>
+    </div>
   </div>
   <div class="footer-bottom">
-    &copy; 2026 <span>ShareSpace</span> &mdash; Empowering South Africa&rsquo;s People's Economy
+    &copy; 2026 <span>ShareSpace</span> &mdash; Empowering South Africa&rsquo;s People's Economy &mdash;
+    <a href="terms.php" style="color:rgba(255,255,255,0.5);text-decoration:none">Terms</a> &middot;
+    <a href="popia.php" style="color:rgba(255,255,255,0.5);text-decoration:none">Privacy</a>
   </div>
 </footer>
 

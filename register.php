@@ -105,6 +105,14 @@ input:focus,select:focus{border-color:var(--accent)}
     <label>Confirm Password *</label>
     <input type="password" name="confirm_password" placeholder="Repeat your password" required>
 
+    <div style="margin-top:16px;display:flex;align-items:flex-start;gap:10px">
+      <input type="checkbox" name="agree_terms" id="agree_terms" required style="width:auto;margin-top:3px;flex-shrink:0">
+      <label for="agree_terms" style="font-size:13px;font-weight:400;margin:0;cursor:pointer">
+        I agree to the <a href="terms.php" target="_blank" style="color:var(--accent)">Terms &amp; Conditions</a>
+        and <a href="popia.php" target="_blank" style="color:var(--accent)">Privacy Policy (POPIA)</a>
+      </label>
+    </div>
+
     <button type="submit" class="btn">Create Account</button>
   </form>
 

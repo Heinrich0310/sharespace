@@ -9,6 +9,36 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
+// Fallback Unsplash photos (same as index.php / listing.php)
+$listing_photos = [
+    'Heavy-duty Power Drill'    => 'https://images.unsplash.com/photo-1504148455328-c376907d081c?w=600&q=80',
+    'Angle Grinder'             => 'https://images.unsplash.com/photo-1531668361947-d00e652ac030?w=600&q=80',
+    'Cement Mixer (Mini)'       => 'https://images.unsplash.com/photo-1531145910467-8d7338926919?w=600&q=80',
+    'Pressure Washer'           => 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80',
+    'Scaffolding Set'           => 'https://images.unsplash.com/photo-1760597307051-67946f9cf865?w=600&q=80',
+    'Plastic Chairs (30 pack)'  => 'https://images.unsplash.com/photo-1582650448861-bd3339f97601?w=600&q=80',
+    'Party Tent (6x6m)'         => 'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=600&q=80',
+    'Folding Tables (10 pack)'  => 'https://images.unsplash.com/photo-1763429338698-439aa108e7fb?w=600&q=80',
+    'Chafing Dishes Set (8)'    => 'https://images.unsplash.com/photo-1555244162-803834f70033?w=600&q=80',
+    'Inflatable Jumping Castle' => 'https://images.unsplash.com/photo-1706743559585-ce8d51210528?w=600&q=80',
+    'Sound System + 2 Speakers' => 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=600&q=80',
+    'DJ Controller & Mixer'     => 'https://images.unsplash.com/photo-1618107095181-e3ba0f53ee59?w=600&q=80',
+    'Projector & Screen'        => 'https://images.unsplash.com/photo-1478720568477-152d9b164e26?w=600&q=80',
+    'Generator (3.5kVA)'        => 'https://images.unsplash.com/photo-1509390144018-eeaf65052242?w=600&q=80',
+    'LED Party Lights Set'      => 'https://images.unsplash.com/photo-1560801122-b59974a71aca?w=600&q=80',
+    'Petrol Lawn Mower'         => 'https://images.unsplash.com/photo-1689728222087-6984f72460c4?w=600&q=80',
+    'Electric Hedge Trimmer'    => 'https://images.unsplash.com/photo-1521633603986-cb82a097ffba?w=600&q=80',
+    'Garden Chipper/Shredder'   => 'https://images.unsplash.com/flagged/photo-1574359364027-b62a716266c1?w=600&q=80',
+    'Wheelbarrow + Garden Tools'=> 'https://images.unsplash.com/photo-1687512966596-1aacfeaf6e54?w=600&q=80',
+    'Water Pump (Submersible)'  => 'https://images.unsplash.com/photo-1622768515656-d51e5dcb68c2?w=600&q=80',
+];
+$category_photos = [
+    'Tools & Equipment'   => 'https://images.unsplash.com/photo-1504148455328-c376907d081c?w=600&q=80',
+    'Furniture & Chairs'  => 'https://images.unsplash.com/photo-1582650448861-bd3339f97601?w=600&q=80',
+    'Electronics & Sound' => 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=600&q=80',
+    'Gardening'           => 'https://images.unsplash.com/photo-1687512966596-1aacfeaf6e54?w=600&q=80',
+];
+
 // Fetch user details
 $user = $pdo->prepare("SELECT * FROM users WHERE user_id = ?");
 $user->execute([$user_id]);
@@ -125,6 +155,7 @@ nav{background:var(--card);border-bottom:1px solid var(--border);padding:0 24px;
 .avail-badge{position:absolute;top:8px;right:8px;font-size:10px;font-weight:500;padding:2px 8px;border-radius:10px;z-index:2}
 .avail-badge.available{background:#E8F5EE;color:var(--green)}
 .avail-badge.unavailable{background:#F5E8E8;color:#C0392B}
+.avail-badge.pending{background:#FFF3CD;color:#856404}
 .my-listing-body{padding:12px}
 .my-listing-title{font-weight:500;font-size:13px;margin-bottom:6px}
 .my-listing-stats{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:10px}
@@ -277,8 +308,13 @@ footer span{color:#F4A261}
         <?php foreach($my_listings as $l): ?>
         <div class="my-listing-card">
           <div class="my-listing-img">
-            <?php if(!empty($l['image_path']) && file_exists($l['image_path'])): ?>
-              <img src="<?= htmlspecialchars($l['image_path']) ?>" alt="">
+            <?php
+              $l_img = (!empty($l['image_path']) && file_exists(__DIR__ . '/' . $l['image_path']))
+                       ? $l['image_path']
+                       : ($listing_photos[$l['title']] ?? $category_photos[$l['category_name']] ?? null);
+            ?>
+            <?php if($l_img): ?>
+              <img src="<?= htmlspecialchars($l_img) ?>" alt="">
             <?php else: ?>
               <span class="emoji"><?= $l['icon'] ?></span>
             <?php endif; ?>
@@ -316,8 +352,13 @@ footer span{color:#F4A261}
         <?php foreach($my_rentals as $r): ?>
         <div class="rental-row">
           <div class="rental-row-img">
-            <?php if(!empty($r['image_path']) && file_exists($r['image_path'])): ?>
-              <img src="<?= htmlspecialchars($r['image_path']) ?>" alt="">
+            <?php
+              $r_img = (!empty($r['image_path']) && file_exists(__DIR__ . '/' . $r['image_path']))
+                       ? $r['image_path']
+                       : ($listing_photos[$r['title']] ?? null);
+            ?>
+            <?php if($r_img): ?>
+              <img src="<?= htmlspecialchars($r_img) ?>" alt="">
             <?php else: ?>
               <?= $r['icon'] ?>
             <?php endif; ?>
@@ -353,8 +394,13 @@ footer span{color:#F4A261}
         <div style="position:relative">
           <a href="listing.php?id=<?= $w['listing_id'] ?>" class="wishlist-card">
             <div class="wishlist-img">
-              <?php if(!empty($w['image_path']) && file_exists($w['image_path'])): ?>
-                <img src="<?= htmlspecialchars($w['image_path']) ?>" alt="">
+              <?php
+                $w_img = (!empty($w['image_path']) && file_exists(__DIR__ . '/' . $w['image_path']))
+                         ? $w['image_path']
+                         : ($listing_photos[$w['title']] ?? $category_photos[$w['category_name']] ?? null);
+              ?>
+              <?php if($w_img): ?>
+                <img src="<?= htmlspecialchars($w_img) ?>" alt="">
               <?php else: ?>
                 <span class="emoji"><?= $w['icon'] ?></span>
               <?php endif; ?>

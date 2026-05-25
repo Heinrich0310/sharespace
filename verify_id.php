@@ -9,12 +9,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $photo_path = '';
 
     if (isset($_FILES['id_photo']) && $_FILES['id_photo']['error'] === 0) {
-        $uploads_dir = 'uploads/id_docs/';
-        if (!is_dir($uploads_dir)) mkdir($uploads_dir, 0755, true);
+        $fs_dir  = __DIR__ . '/uploads/id_docs/';
+        $url_dir = 'uploads/id_docs/';
+        if (!is_dir($fs_dir)) mkdir($fs_dir, 0755, true);
         $ext      = pathinfo($_FILES['id_photo']['name'], PATHINFO_EXTENSION);
         $filename = 'id_' . $user_id . '_' . uniqid() . '.' . $ext;
-        move_uploaded_file($_FILES['id_photo']['tmp_name'], $uploads_dir . $filename);
-        $photo_path = $uploads_dir . $filename;
+        if (move_uploaded_file($_FILES['id_photo']['tmp_name'], $fs_dir . $filename)) {
+            $photo_path = $url_dir . $filename;
+        }
     }
 
     // For demo purposes auto-approve — in production admin would review

@@ -3,7 +3,12 @@ session_start();
 require '../includes/db.php';
 if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') { header("Location: ../login.php"); exit(); }
 
-// Toggle availability
+// Approve pending listing
+if (isset($_GET['approve'])) {
+    $pdo->prepare("UPDATE listings SET availability_status='available' WHERE listing_id=?")->execute([(int)$_GET['approve']]);
+    header("Location: listings.php"); exit();
+}
+// Toggle availability (available ↔ unavailable, skips pending)
 if (isset($_GET['toggle'])) {
     $l = $pdo->prepare("SELECT availability_status FROM listings WHERE listing_id=?");
     $l->execute([(int)$_GET['toggle']]);
@@ -72,6 +77,7 @@ tr:last-child td{border-bottom:none}
 .status{font-size:11px;font-weight:500;padding:3px 10px;border-radius:20px;display:inline-block}
 .status.available{background:#E8F5EE;color:#2D7A4F}
 .status.unavailable{background:#F5E8E8;color:#C0392B}
+.status.pending{background:#FFF3CD;color:#856404}
 .btn-sm{font-size:12px;padding:4px 10px;border-radius:6px;cursor:pointer;border:1px solid var(--border);background:transparent;color:#6B5C4A;text-decoration:none;display:inline-block}
 .btn-sm.danger{border-color:#E88;color:#C0392B}
 </style>
@@ -101,8 +107,12 @@ tr:last-child td{border-bottom:none}
             <td><?= htmlspecialchars($l['category_name']) ?></td>
             <td>R<?= number_format($l['price_per_day'],2) ?></td>
             <td><span class="status <?= $l['availability_status'] ?>"><?= ucfirst($l['availability_status']) ?></span></td>
-            <td style="display:flex;gap:6px">
-              <a href="listings.php?toggle=<?= $l['listing_id'] ?>" class="btn-sm">Toggle</a>
+            <td style="display:flex;gap:6px;flex-wrap:wrap">
+              <?php if($l['availability_status'] === 'pending'): ?>
+                <a href="listings.php?approve=<?= $l['listing_id'] ?>" class="btn-sm" style="border-color:#2D7A4F;color:#2D7A4F">Approve</a>
+              <?php else: ?>
+                <a href="listings.php?toggle=<?= $l['listing_id'] ?>" class="btn-sm">Toggle</a>
+              <?php endif; ?>
               <button class="btn-sm danger" onclick="openDelete(<?= $l['listing_id'] ?>, '<?= htmlspecialchars(addslashes($l['title']), ENT_QUOTES) ?>')">Delete</button>
             </td>
           </tr>

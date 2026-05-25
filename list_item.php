@@ -47,11 +47,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!$title || !$price || !$category_id) {
             $error = "Please fill in all required fields.";
         } else {
-            $stmt = $pdo->prepare("INSERT INTO listings 
-                (user_id, category_id, title, description, price_per_day, image_path, delivery_option) 
-                VALUES (?, ?, ?, ?, ?, ?, ?)");
+            $stmt = $pdo->prepare("INSERT INTO listings
+                (user_id, category_id, title, description, price_per_day, image_path, delivery_option, availability_status)
+                VALUES (?, ?, ?, ?, ?, ?, ?, 'pending')");
             $stmt->execute([$_SESSION['user_id'], $category_id, $title, $description, $price, $image_path, $delivery_option]);
-            $success = "Your item has been listed successfully!";
+            $new_listing_id = $pdo->lastInsertId();
+            $success = "Your listing has been submitted and is awaiting admin approval.";
         }
     }
 }
@@ -115,7 +116,7 @@ textarea{resize:vertical;min-height:100px}
 
   <div class="card">
     <?php if($error): ?><div class="error"><?= htmlspecialchars($error) ?></div><?php endif; ?>
-    <?php if($success): ?><div class="success"><?= htmlspecialchars($success) ?> <a href="index.php" style="color:var(--accent)">View listings</a></div><?php endif; ?>
+    <?php if($success): ?><div class="success"><?= htmlspecialchars($success) ?> <a href="listing.php?id=<?= $new_listing_id ?>" style="color:var(--accent)">View your listing</a></div><?php endif; ?>
 
     <form method="POST" enctype="multipart/form-data">
 
