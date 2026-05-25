@@ -1,0 +1,25 @@
+# ── Credentials — NEVER commit these ──────────────────────────
+includes/db.php
+dbcheck.php
+
+# ── User-uploaded files ────────────────────────────────────────
+uploads/listings/*.jpg
+uploads/listings/*.jpeg
+uploads/listings/*.png
+uploads/listings/*.gif
+uploads/listings/*.webp
+
+# ── Build / helper scripts ─────────────────────────────────────
+make_pptx.py
+
+# ── OS / editor junk ──────────────────────────────────────────
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.idea/
+.vscode/
+
+# ── Logs ──────────────────────────────────────────────────────
+*.log
+error_log
