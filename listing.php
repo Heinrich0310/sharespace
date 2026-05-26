@@ -167,7 +167,7 @@ input:focus,select:focus{border-color:var(--accent)}
 <body>
 <nav>
   <a class="logo" href="index.php">Share<span>Space</span></a>
-  <a class="back" href="index.php">&#8592; Back to listings</a>
+  <a class="back" href="index.php#listings">&#8592; Back to listings</a>
 </nav>
 
 <div class="container">

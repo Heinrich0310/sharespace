@@ -114,6 +114,11 @@ nav{background:var(--card);border-bottom:1px solid var(--border);padding:0 24px;
 .nav-links a{font-size:13px;color:var(--muted);text-decoration:none;padding:6px 10px;border-radius:6px}
 .nav-links a:hover{background:var(--bg2);color:var(--text)}
 .btn-nav{background:var(--accent);color:#fff!important;padding:7px 16px!important;border-radius:8px;font-size:13px;font-weight:500}
+.hamburger{display:none;flex-direction:column;justify-content:center;gap:5px;cursor:pointer;padding:8px;background:none;border:none;border-radius:8px}
+.hamburger span{display:block;width:22px;height:2px;background:var(--text);border-radius:2px;transition:.3s}
+.hamburger.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+.hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0)}
+.hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
 .container{max-width:1000px;margin:0 auto;padding:32px 24px}
 
 /* PROFILE HEADER */
@@ -222,6 +227,14 @@ footer{background:#1A1208;color:rgba(255,255,255,0.5);text-align:center;padding:
 footer span{color:#F4A261}
 
 
+@media(max-width:700px){
+  nav{padding:0 16px}
+  .hamburger{display:flex}
+  .nav-links{display:none;flex-direction:column;align-items:stretch;position:absolute;top:58px;left:0;right:0;background:#fff;border-bottom:1px solid var(--border);padding:12px 16px;gap:2px;z-index:99;box-shadow:0 8px 24px rgba(0,0,0,0.1)}
+  .nav-links.open{display:flex}
+  .nav-links a{padding:12px 16px;border-radius:8px;font-size:14px}
+  .btn-nav{text-align:center;margin-top:4px}
+}
 @media(max-width:600px){
   .stats{grid-template-columns:1fr 1fr}
   .profile-header{flex-direction:column;text-align:center}
@@ -233,8 +246,11 @@ footer span{color:#F4A261}
 
 <nav>
   <a class="logo" href="index.php">Share<span>Space</span></a>
-  <div class="nav-links">
-    <a href="index.php">Browse</a>
+  <button class="hamburger" id="hamburger" onclick="toggleNav()" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="nav-links" id="navLinks">
+    <a href="index.php#listings">Browse</a>
     <a href="list_item.php">+ List Item</a>
     <a href="messages.php" style="position:relative">
       Messages
@@ -473,6 +489,16 @@ document.querySelectorAll('[data-tab]').forEach(function(el) {
     if (target) target.classList.add('active');
     if (this.classList.contains('tab')) this.classList.add('active');
   };
+});
+function toggleNav(){
+  document.getElementById('hamburger').classList.toggle('open');
+  document.getElementById('navLinks').classList.toggle('open');
+}
+document.addEventListener('click',function(e){
+  var n=document.getElementById('navLinks');var b=document.getElementById('hamburger');
+  if(n&&b&&!n.contains(e.target)&&!b.contains(e.target)&&n.classList.contains('open')){
+    n.classList.remove('open');b.classList.remove('open');
+  }
 });
 </script>
 </body>

@@ -94,6 +94,11 @@ nav{background:rgba(255,255,255,0.95);backdrop-filter:blur(12px);border-bottom:1
 .btn-nav:hover{background:#a83d09!important;transform:translateY(-1px)}
 .nav-msg-wrap{position:relative}
 .nav-dot{position:absolute;top:4px;right:6px;width:7px;height:7px;background:#E8870A;border-radius:50%;border:2px solid #fff}
+.hamburger{display:none;flex-direction:column;justify-content:center;gap:5px;cursor:pointer;padding:8px;background:none;border:none;border-radius:8px}
+.hamburger span{display:block;width:22px;height:2px;background:var(--text);border-radius:2px;transition:.3s}
+.hamburger.open span:nth-child(1){transform:rotate(45deg) translate(5px,5px)}
+.hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0)}
+.hamburger.open span:nth-child(3){transform:rotate(-45deg) translate(5px,-5px)}
 
 /* HERO */
 .hero{position:relative;background:linear-gradient(145deg,#1A0D04 0%,#3A1E08 40%,#5C3010 100%);padding:80px 32px 100px;text-align:center;overflow:hidden}
@@ -198,6 +203,17 @@ footer{background:#18120A;color:rgba(255,255,255,0.4);padding:48px 32px 32px;mar
 
 @media(max-width:700px){
   nav{padding:0 16px}
+  .hamburger{display:flex}
+  .nav-links{
+    display:none;flex-direction:column;align-items:stretch;
+    position:absolute;top:62px;left:0;right:0;
+    background:#fff;border-bottom:1px solid var(--border);
+    padding:12px 16px;gap:2px;z-index:199;
+    box-shadow:0 8px 24px rgba(0,0,0,0.1)
+  }
+  .nav-links.open{display:flex}
+  .nav-links a{padding:12px 16px;border-radius:8px;font-size:14px}
+  .btn-nav{text-align:center;margin-top:4px}
   .hero{padding:56px 16px 72px}
   .search-outer{padding:0 16px}
   .search-box{margin:0;transform:translateY(-24px)}
@@ -216,8 +232,11 @@ footer{background:#18120A;color:rgba(255,255,255,0.4);padding:48px 32px 32px;mar
 <!-- NAV -->
 <nav>
   <a class="logo" href="index.php">Share<span>Space</span></a>
-  <div class="nav-links">
-    <a href="index.php">Browse</a>
+  <button class="hamburger" id="hamburger" onclick="toggleNav()" aria-label="Open menu">
+    <span></span><span></span><span></span>
+  </button>
+  <div class="nav-links" id="navLinks">
+    <a href="index.php#listings">Browse</a>
     <?php if(isset($_SESSION['user_id'])): ?>
       <a href="list_item.php">+ List Item</a>
       <a href="dashboard.php">My Account</a>
@@ -276,7 +295,7 @@ footer{background:#18120A;color:rgba(255,255,255,0.4);padding:48px 32px 32px;mar
       <option value="">All Categories</option>
       <?php foreach($cats as $c): ?>
         <option value="<?= htmlspecialchars($c['category_name']) ?>" <?= $cat_filter===$c['category_name']?'selected':'' ?>>
-          <?= $c['icon'] ?> <?= htmlspecialchars($c['category_name']) ?>
+          <?= htmlspecialchars($c['category_name']) ?>
         </option>
       <?php endforeach; ?>
     </select>
@@ -308,9 +327,9 @@ footer{background:#18120A;color:rgba(255,255,255,0.4);padding:48px 32px 32px;mar
     </div>
   </div>
   <div class="cats">
-    <a href="index.php" class="cat <?= !$cat_filter?'active':'' ?>">All Items</a>
+    <a href="index.php#listings" class="cat <?= !$cat_filter?'active':'' ?>">All Items</a>
     <?php foreach($cats as $c): ?>
-      <a href="index.php?cat=<?= urlencode($c['category_name']) ?>" class="cat <?= $cat_filter===$c['category_name']?'active':'' ?>">
+      <a href="index.php?cat=<?= urlencode($c['category_name']) ?>#listings" class="cat <?= $cat_filter===$c['category_name']?'active':'' ?>">
         <?= htmlspecialchars($c['category_name']) ?>
       </a>
     <?php endforeach; ?>
@@ -325,7 +344,7 @@ footer{background:#18120A;color:rgba(255,255,255,0.4);padding:48px 32px 32px;mar
       <div class="section-sub"><?= $total_listings ?> verified item<?= $total_listings!=1?'s':'' ?> from your community</div>
     </div>
     <?php if($cat_filter || $search || $location_filter): ?>
-      <a href="index.php" class="section-link">Clear filters &#10005;</a>
+      <a href="index.php#listings" class="section-link">Clear filters &#10005;</a>
     <?php endif; ?>
   </div>
   <div class="listings">
@@ -431,7 +450,7 @@ footer{background:#18120A;color:rgba(255,255,255,0.4);padding:48px 32px 32px;mar
     </div>
     <div class="footer-col">
       <h4>Platform</h4>
-      <a href="index.php">Browse Listings</a>
+      <a href="index.php#listings">Browse Listings</a>
       <a href="list_item.php">List an Item</a>
       <a href="register.php">Create Account</a>
       <a href="login.php">Login</a>
@@ -439,7 +458,7 @@ footer{background:#18120A;color:rgba(255,255,255,0.4);padding:48px 32px 32px;mar
     <div class="footer-col">
       <h4>Categories</h4>
       <?php foreach($cats as $c): ?>
-        <a href="index.php?cat=<?= urlencode($c['category_name']) ?>"><?= htmlspecialchars($c['category_name']) ?></a>
+        <a href="index.php?cat=<?= urlencode($c['category_name']) ?>#listings"><?= htmlspecialchars($c['category_name']) ?></a>
       <?php endforeach; ?>
     </div>
     <div class="footer-col">
@@ -455,5 +474,25 @@ footer{background:#18120A;color:rgba(255,255,255,0.4);padding:48px 32px 32px;mar
   </div>
 </footer>
 
+<script>
+function toggleNav(){
+  document.getElementById('hamburger').classList.toggle('open');
+  document.getElementById('navLinks').classList.toggle('open');
+}
+document.addEventListener('click',function(e){
+  var nav=document.getElementById('navLinks');
+  var btn=document.getElementById('hamburger');
+  if(nav&&btn&&!nav.contains(e.target)&&!btn.contains(e.target)&&nav.classList.contains('open')){
+    nav.classList.remove('open');btn.classList.remove('open');
+  }
+});
+// After a search/filter, scroll down to the listings section
+if(window.location.search){
+  window.addEventListener('load',function(){
+    var el=document.getElementById('listings');
+    if(el) el.scrollIntoView({behavior:'smooth',block:'start'});
+  });
+}
+</script>
 </body>
 </html>

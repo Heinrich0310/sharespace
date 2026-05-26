@@ -113,7 +113,7 @@ textarea{resize:vertical;min-height:100px}
 <body>
 <nav>
   <a class="logo" href="index.php">Share<span>Space</span></a>
-  <a class="back" href="index.php">&#8592; Back</a>
+  <a class="back" href="dashboard.php">&#8592; My Account</a>
 </nav>
 
 <div class="container">

@@ -51,12 +51,12 @@ tr:last-child td{border-bottom:none}
 <body>
 <div class="sidebar">
   <div class="sidebar-logo">Share<span>Space</span></div>
-  <a href="index.php" class="nav-item">&#9783; Dashboard</a>
-  <a href="users.php" class="nav-item">&#128100; Users</a>
-  <a href="listings.php" class="nav-item">&#127981; Listings</a>
-  <a href="rentals.php" class="nav-item active">&#128203; Rentals</a>
-  <a href="../index.php" class="nav-item">&#127760; View Site</a>
-  <a href="../logout.php" class="nav-item">&#128682; Logout</a>
+  <a href="index.php" class="nav-item">Dashboard</a>
+  <a href="users.php" class="nav-item">Users</a>
+  <a href="listings.php" class="nav-item">Listings</a>
+  <a href="rentals.php" class="nav-item active">Rentals</a>
+  <a href="../index.php" class="nav-item">View Site</a>
+  <a href="../logout.php" class="nav-item">Logout</a>
 </div>
 <div class="main">
   <div class="topbar"><div class="topbar-title">Rental Transactions</div></div>
