@@ -1,0 +1,20 @@
+# Block execution of any script in the uploads tree.
+# Even if a malicious file slips past application-level validation,
+# Apache will refuse to run it as PHP / CGI / etc.
+
+<FilesMatch "\.(php|php3|php4|php5|php7|phtml|phar|pl|py|cgi|sh|asp|aspx)$">
+    Require all denied
+</FilesMatch>
+
+# Belt and braces: stop PHP handlers from claiming these files at all.
+RemoveHandler .php .phtml .phar
+RemoveType    .php .phtml .phar
+php_flag      engine off
+
+# Force a safe content type for unknown image-ish files
+AddType image/jpeg .jpg .jpeg
+AddType image/png  .png
+AddType image/webp .webp
+
+# No directory listings
+Options -Indexes
