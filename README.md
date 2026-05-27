@@ -1,4 +1,4 @@
-# ShareSpace 🔧🪑🔊🌿
+# ShareSpace 
 
 > **Rent Anything from Your Community** — a peer-to-peer rental marketplace built for township and urban communities in South Africa.
 
