@@ -23,12 +23,12 @@ $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
 $listings = $stmt->fetchAll();
 
-// High quality Unsplash photos per category
-$placeholders = [
-    'Tools & Equipment',
-    'Furniture & Chairs',
-    'Electronics & Sound',
-    'Gardening',
+// Category fallback photos (keyed by category name — must match listing.php)
+$category_photos = [
+    'Tools & Equipment'   => 'https://images.unsplash.com/photo-1504148455328-c376907d081c?w=600&q=80',
+    'Furniture & Chairs'  => 'https://images.unsplash.com/photo-1769874827774-421332072cb0?w=600&q=80',
+    'Electronics & Sound' => 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=600&q=80',
+    'Gardening'           => 'https://images.unsplash.com/photo-1687512966596-1aacfeaf6e54?w=600&q=80',
 ];
 
 // Per-listing Unsplash photos for demo data
@@ -357,7 +357,7 @@ footer{background:#18120A;color:rgba(255,255,255,0.4);padding:48px 32px 32px;mar
         } elseif(isset($listing_photos[$item['title']])) {
             $photo = $listing_photos[$item['title']];
         } else {
-            $photo = $placeholders[$item['category_name']] ?? 'https://images.unsplash.com/photo-1504148455328-c376907d081c?w=600&q=80';
+            $photo = $category_photos[$item['category_name']] ?? 'https://images.unsplash.com/photo-1504148455328-c376907d081c?w=600&q=80';
         }
       ?>
         <a href="listing.php?id=<?= $item['listing_id'] ?>" class="listing-card">
