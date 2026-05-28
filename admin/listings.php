@@ -113,6 +113,7 @@ tr:last-child td{border-bottom:none}
               <?php else: ?>
                 <a href="listings.php?toggle=<?= $l['listing_id'] ?>" class="btn-sm">Toggle</a>
               <?php endif; ?>
+              <a href="../edit_listing.php?id=<?= $l['listing_id'] ?>" class="btn-sm" style="border-color:#D4530A;color:#D4530A">Edit / Photo</a>
               <button class="btn-sm danger" onclick="openDelete(<?= $l['listing_id'] ?>, '<?= htmlspecialchars(addslashes($l['title']), ENT_QUOTES) ?>')">Delete</button>
             </td>
           </tr>

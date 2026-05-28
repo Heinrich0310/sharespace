@@ -9,15 +9,25 @@ if (!isset($_SESSION['user_id'])) {
 
 $listing_id = (int)($_GET['id'] ?? 0);
 $user_id    = $_SESSION['user_id'];
+$is_admin   = (($_SESSION['role'] ?? '') === 'admin');
 
-$stmt = $pdo->prepare("SELECT * FROM listings WHERE listing_id = ? AND user_id = ?");
-$stmt->execute([$listing_id, $user_id]);
+// Admins may edit any listing; regular users only their own.
+if ($is_admin) {
+    $stmt = $pdo->prepare("SELECT * FROM listings WHERE listing_id = ?");
+    $stmt->execute([$listing_id]);
+} else {
+    $stmt = $pdo->prepare("SELECT * FROM listings WHERE listing_id = ? AND user_id = ?");
+    $stmt->execute([$listing_id, $user_id]);
+}
 $listing = $stmt->fetch();
 
 if (!$listing) {
-    header("Location: dashboard.php");
+    header("Location: " . ($is_admin ? "admin/listings.php" : "dashboard.php"));
     exit();
 }
+
+// Keep the original owner so an admin edit never reassigns ownership.
+$owner_id = $listing['user_id'];
 
 $cats    = $pdo->query("SELECT * FROM categories")->fetchAll();
 $success = '';
@@ -63,8 +73,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!$title || !$price || !$category_id) {
             $error = "Please fill in all required fields.";
         } else {
+            // Scope the UPDATE to the listing's real owner (admins use $owner_id,
+            // regular users can only ever match their own id).
+            $scope_id = $is_admin ? $owner_id : $user_id;
             $pdo->prepare("UPDATE listings SET title=?, description=?, price_per_day=?, category_id=?, delivery_option=?, availability_status=?, image_path=? WHERE listing_id=? AND user_id=?")
-                ->execute([$title, $description, $price, $category_id, $delivery_option, $availability, $image_path, $listing_id, $user_id]);
+                ->execute([$title, $description, $price, $category_id, $delivery_option, $availability, $image_path, $listing_id, $scope_id]);
             $listing = array_merge($listing, compact('title','description','price','category_id','delivery_option','availability_status','image_path'));
             $success = "Listing updated successfully!";
         }
@@ -122,12 +135,12 @@ textarea{resize:vertical;min-height:100px}
 <body>
 <nav>
   <a class="logo" href="index.php">Share<span>Space</span></a>
-  <a class="back" href="dashboard.php">&#8592; My Account</a>
+  <a class="back" href="<?= $is_admin ? 'admin/listings.php' : 'dashboard.php' ?>">&#8592; <?= $is_admin ? 'Back to Admin' : 'My Account' ?></a>
 </nav>
 
 <div class="container">
   <div class="page-title">Edit Listing</div>
-  <div class="page-sub">Update your item details</div>
+  <div class="page-sub"><?= $is_admin ? 'Editing as admin &mdash; changes apply to this user&rsquo;s listing' : 'Update your item details' ?></div>
 
   <div class="card">
     <?php if($error): ?><div class="error"><?= htmlspecialchars($error) ?></div><?php endif; ?>
