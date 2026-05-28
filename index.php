@@ -36,11 +36,11 @@ $listing_photos = [
     'Heavy-duty Power Drill'       => 'https://images.unsplash.com/photo-1504148455328-c376907d081c?w=600&q=80',
     'Angle Grinder'                => 'https://images.unsplash.com/photo-1531668361947-d00e652ac030?w=600&q=80',
     'Cement Mixer (Mini)'          => 'https://images.unsplash.com/photo-1531145910467-8d7338926919?w=600&q=80',
-    'Pressure Washer'              => 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80',
+    'Pressure Washer'              => 'https://images.unsplash.com/photo-1630868837435-5f7abc85e012?w=600&q=80',
     'Scaffolding Set'              => 'https://images.unsplash.com/photo-1760597307051-67946f9cf865?w=600&q=80',
-    'Plastic Chairs (30 pack)'     => 'https://images.unsplash.com/photo-1582650448861-bd3339f97601?w=600&q=80',
-    'Party Tent (6x6m)'            => 'https://images.unsplash.com/photo-1464366400600-7168b8af9bc3?w=600&q=80',
-    'Folding Tables (10 pack)'     => 'https://images.unsplash.com/photo-1763429338698-439aa108e7fb?w=600&q=80',
+    'Plastic Chairs (30 pack)'     => 'https://images.unsplash.com/photo-1769874827774-421332072cb0?w=600&q=80',
+    'Party Tent (6x6m)'            => 'https://images.unsplash.com/photo-1777097489810-a376ba4478e7?w=600&q=80',
+    'Folding Tables (10 pack)'     => 'https://images.unsplash.com/photo-1762765685348-4bced247d12c?w=600&q=80',
     'Chafing Dishes Set (8)'       => 'https://images.unsplash.com/photo-1555244162-803834f70033?w=600&q=80',
     'Inflatable Jumping Castle'    => 'https://images.unsplash.com/photo-1706743559585-ce8d51210528?w=600&q=80',
     'Sound System + 2 Speakers'   => 'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=600&q=80',
@@ -53,6 +53,7 @@ $listing_photos = [
     'Garden Chipper/Shredder'      => 'https://images.unsplash.com/flagged/photo-1574359364027-b62a716266c1?w=600&q=80',
     'Wheelbarrow + Garden Tools'   => 'https://images.unsplash.com/photo-1687512966596-1aacfeaf6e54?w=600&q=80',
     'Water Pump (Submersible)'     => 'https://images.unsplash.com/photo-1622768515656-d51e5dcb68c2?w=600&q=80',
+    'Test Bicycle'                 => 'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600&q=80',
 ];
 
 $unread_count = 0;
